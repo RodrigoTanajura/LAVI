@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import odeint
 
+# Simulating rotordynamics using analytical solutions taken from YAMAMOTO.
+
 w = np.linspace(0,50,1001)
 k = 10000
 c = 100
@@ -24,10 +26,15 @@ def integray(y, w, k, c, m, u):
     dydt = [x_dot,(m*u*w**2 *np.sin(w*t)-(k*x)-(c*x_dot))/m]
     return dydt
 
+# Odeint will solve the differential equation.
+
 solx = odeint(integrax, y0, w, args=(k, c, m, u))
 soly = odeint(integray, y0, w, args=(k, c, m, u))
 
-plt.plot(r,solx[:,0])
+# Plotting results, frequency vs amplitude
+
+plt.plot(r,soly[:,0])
 plt.xlabel('w/wn')
 plt.ylabel('Amplitude')
 plt.show()
+# %%
