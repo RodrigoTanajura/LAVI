@@ -9,6 +9,8 @@ from scipy.optimize import curve_fit, minimize_scalar, minimize, least_squares, 
 from math import trunc
 
 material = rs.Material("Aldemir", 7850, E=205e9, G_s=None, Poisson=0.29, color='#525252')
+steel = rs.steel
+
 
 samples = 101
 speed_range = np.linspace(0, 500, samples) # rads/s
