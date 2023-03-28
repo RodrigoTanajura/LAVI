@@ -1,5 +1,6 @@
 #%%
 import ross as rs
+from math import trunc
 
 steel = rs.materials.steel
 
@@ -11,6 +12,10 @@ cyy = 10
 
 k = [kxx,kyy,cxx,cyy]
 
+bounds=[(trunc(0.8*1.1*kxx),trunc(1.2*1.1*kxx)),
+        (trunc(0.8*1.1*kyy),trunc(1.2*1.1*kyy)),
+        (trunc(0.1*1.1*cxx),trunc(2*1.1*cxx)),
+        (trunc(0.1*1.1*cyy),trunc(2*1.1*cyy))]
 
 shaft = [
         rs.ShaftElement(1.2 / (6), idl=0.03, odl=0.08, material=steel)
@@ -31,6 +36,5 @@ bearings = [
     ]
 
 rotor1 = rs.Rotor(shaft, disks, bearings)
-
 rotor1.plot_rotor()
 # %%
