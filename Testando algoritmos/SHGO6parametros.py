@@ -5,17 +5,17 @@ import plotly.graph_objects as go
 import ross as rs
 import plotly.io as pio
 from random import randint, gauss
-from scipy.optimize import curve_fit, minimize_scalar, minimize, least_squares, shgo
+from scipy.optimize import shgo
 from math import trunc
 
 steel = rs.materials.steel
-samples = 101
-speed_range = np.linspace(0, 500, samples) # rads/s
+samples = 50
+speed_range = np.linspace(105, 135, samples) # rads/s
 kx = 1e6*0.92435
 ky = 1e6*1.14362
 kxy = 1e6
-cxx = 1e3*0.92435
-cyy = 1e3*1.14362
+cxx = 1e3*0.1234
+cyy = 1e3*0.5748
 cxy = 1e3
 
 k = [kx,ky,kxy,cxx,cyy,cxy]
@@ -41,28 +41,30 @@ def change_bearings(k):
     ]
     rotor = rs.Rotor(shaft, disks, bearings)
     results1 = rotor.run_freq_response(speed_range)
-    return np.abs(results1.freq_resp[16][16])
+    r = results1.freq_resp[16][16]
+    return np.sqrt(r.imag**2 + r.real**2)
 
 noise = []
-gaussiano = 2e-6
+gaussiano = 1e-6
 for i in range(samples):
     noise.append(gauss(0,gaussiano))
 
 def real_input(k):
-    return change_bearings(k)
+    return change_bearings(k)+noise
+
+z1 = real_input([kx,ky,kxy,cxx,cyy,cxy])
 
 def objective(k):
-    res = change_bearings(k) - real_input([kx,ky,kxy,cxx,cyy,cxy])
-    for i in range(len(res)):
-        res[i] = (res[i]**2)
-    res = sum(res)/2
+    res = np.abs(change_bearings(k) - z1)
+    res = sum(res/np.abs(z1))
     return res
 
-# res = least_squares(objective, x0=8e5, verbose=2,
-#  method='trf', xtol=1e-8, ftol=1e-8, gtol = 1e-3)
+res = shgo(objective, bounds=[(0.93*kx,1.17*kx),
+(0.92*ky,1.18*ky),(0.95*kxy,1.12*kxy),(0.94*cxx,1.15*cxx),
+(0.91*cyy,1.17*cyy),(0.91*cxy,1.18*cxy)], 
+options = {"disp":"True","f_min":10})
 
-res = shgo(objective, bounds=[(0.9*kx,1.1*kx),
-(0.9*ky,1.1*ky),(0.9*kxy,1.1*kxy),(0.9*cxx,1.1*cxx),(0.9*cyy,1.1*cyy),(0.9*cxy,1.1*cxy)])
+# options= {"f_min":10e-6})
 
 plt.plot(speed_range, change_bearings([kx,ky,kxy,cxx,cyy,cxy]),'b')
 plt.plot(speed_range, change_bearings(res.x),'r')
@@ -72,4 +74,5 @@ print("K encontrado vs esperado:")
 for i in range(len(res.x)):
     print (trunc(res.x[i]), "|" , trunc(k[i]))
 print("Noise de sigma = ", gaussiano)
+
 # %%

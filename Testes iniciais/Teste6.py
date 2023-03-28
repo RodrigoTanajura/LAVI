@@ -50,8 +50,6 @@ result = minimize_scalar(objective)
 p_at_minimum = result.x  # i'm a scalar!
 print('minimize_scalar result: ', p_at_minimum)
 
-
-
 plt.plot(speed_range, create_rotor(k),'b')
 plt.plot(speed_range, create_rotor(78),'r')
 plt.plot(speed_range, real_input(k),'o')

@@ -1,0 +1,142 @@
+[parameters]
+
+["ShaftElement_ShaftElement 0"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 0
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 0"
+
+["ShaftElement_ShaftElement 1"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 1
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 1"
+
+["ShaftElement_ShaftElement 2"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 2
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 2"
+
+["ShaftElement_ShaftElement 3"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 3
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 3"
+
+["ShaftElement_ShaftElement 4"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 4
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 4"
+
+["ShaftElement_ShaftElement 5"]
+L = 0.19999999999999998
+idl = 0.03
+odl = 0.08
+idr = 0.03
+odr = 0.08
+n = 5
+axial_force = 0
+torque = 0
+shear_effects = true
+rotary_inertia = true
+gyroscopic = true
+shear_method_calc = "cowper"
+tag = "ShaftElement 5"
+
+["DiskElement_Disk 0"]
+n = 3
+m = 75.37409625457549
+Id = 0.8240901190500253
+Ip = 1.56778120209517
+tag = "Disk 0"
+scale_factor = 1.0
+color = "Firebrick"
+
+["ShaftElement_ShaftElement 0".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"
+
+["ShaftElement_ShaftElement 1".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"
+
+["ShaftElement_ShaftElement 2".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"
+
+["ShaftElement_ShaftElement 3".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"
+
+["ShaftElement_ShaftElement 4".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"
+
+["ShaftElement_ShaftElement 5".material]
+name = "Steel"
+rho = 7810.0
+E = 211000000000.0
+G_s = 81200000000.0
+color = "#525252"

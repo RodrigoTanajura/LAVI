@@ -11,7 +11,6 @@ from math import trunc
 material = rs.Material("Aldemir", 7850, E=205e9, G_s=None, Poisson=0.29, color='#525252')
 steel = rs.steel
 
-
 samples = 101
 speed_range = np.linspace(0, 500, samples) # rads/s
 kx = 1e6*0.92435
@@ -22,9 +21,13 @@ cyy = 1e3*1.14362
 cxy = 1e3
 
 k = [kx,ky,kxy,cxx,cyy,cxy]
+L=[0, 25, 49, 65, 80, 110, 140, 161, 190, 220, 250, 285, 295, 305, 330, 360, 390, 
+420, 450, 480, 510, 523, 533, 543, 570, 594, 630, 664, 700, 730, 760, 790, 830, 862]
+L = [L[i] - L[i - 1] for i in range(1, len(L))]
 
 shaft = [
-        rs.ShaftElement(0.86 / (33), idl=0, odl=0.017, material=material)
+        rs.ShaftElement(L = L[i]/1000
+        , idl=0, odl=0.017, material=material)
         for i in range(33)
     ]
 
@@ -36,10 +39,11 @@ disks = [
         n=(23), material=steel, width=0.020, i_d=0.017, o_d=0.150
     )
 ]
+
 bearings = [
-        rs.BearingElement(4, kxx=k[0], kyy=k[1], kxy=k[2],
+        rs.BearingElement(0, kxx=k[0], kyy=k[1], kxy=k[2],
         cxx=k[3], cyy=k[4], cxy=k[5]),
-        rs.BearingElement(31, kxx=k[0], kyy=k[1], kxy=k[2],
+        rs.BearingElement(len(L), kxx=k[0], kyy=k[1], kxy=k[2],
         cxx=k[3], cyy=k[4], cxy=k[5])
 ]
 
