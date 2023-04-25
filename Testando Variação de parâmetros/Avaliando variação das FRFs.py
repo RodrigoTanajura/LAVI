@@ -69,7 +69,7 @@ for i in range(len(intervalo)):
 
 for i in range(len(intervalo)):
     plt.plot(speed_range,r[i],label='={}'.format(round(intervalo[i],2)))
-plt.title('Varying kxx from {} to {}. Average FRF calculation time: {}'.format(bounds[0][0], bounds[0][1], round(np.mean(tempo),2)))
+# plt.title('Average FRF calculation time: {}'.format(round(np.mean(tempo),2)))
 plt.legend()
 plt.show()
 All_stats.append(r)
@@ -98,7 +98,6 @@ for i in range(len(intervalo)):
 
 for i in range(len(intervalo)):
     plt.plot(speed_range,r[i],label='={}'.format(round(intervalo[i],2)))
-plt.title('Varying kyy from {} to {}. Average FRF calculation time: {}'.format(bounds[1][0], bounds[1][1], round(np.mean(tempo),2)))
 plt.legend()
 plt.show()
 All_stats.append(r)
@@ -127,7 +126,6 @@ for i in range(len(intervalo)):
 
 for i in range(len(intervalo)):
     plt.plot(speed_range,r[i],label='={}'.format(round(intervalo[i],2)))
-plt.title('Varying cxx from {} to {}. Average FRF calculation time: {}'.format(bounds[2][0], bounds[2][1], round(np.mean(tempo),2)))
 plt.legend()
 plt.show()
 All_stats.append(r)
@@ -155,7 +153,6 @@ for i in range(len(intervalo)):
     print("Iteration {}, duration: {}".format(i+1, et-st))
 for i in range(len(intervalo)):
     plt.plot(speed_range,r[i],label='={}'.format(round(intervalo[i],2)))
-plt.title('Varying cyy from {} to {}. Average FRF calculation time: {}'.format(bounds[3][0], bounds[3][1], round(np.mean(tempo),2)))
 plt.legend()
 plt.show()
 All_stats.append(r)

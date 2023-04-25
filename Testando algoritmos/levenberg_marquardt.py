@@ -1,4 +1,4 @@
-# Aplicando Levenberg Marquardt
+# Aplicando Levenberg Marquardt 
 #%%
 print("Iniciando bibliotecas e funções")
 import time

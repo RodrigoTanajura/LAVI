@@ -16,8 +16,6 @@ from scipy.signal import find_peaks
 import pandas as pd
 import openpyxl
 from scipy.optimize import differential_evolution, dual_annealing, shgo
-import lmfit
-from lmfit import Minimizer, Parameters, report_fit
 
 st2 = time.time()
 steel = rs.materials.steel
@@ -33,6 +31,15 @@ bounds=[(trunc(0.8*1.1*kxx),trunc(1.2*1.1*kxx)),
         (trunc(0.1*1.1*cxx),trunc(2*1.1*cxx)),
         (trunc(0.1*1.1*cyy),trunc(2*1.1*cyy))]
 
+bounds1 = [(trunc(0.8*1.1*kxx),trunc(1.2*1.1*kxx)),
+        (trunc(0.8*1.1*kyy),trunc(1.2*1.1*kyy))]
+
+bounds2 = [(trunc(0.1*1.1*cxx),trunc(2*1.1*cxx)),
+        (trunc(0.1*1.1*cyy),trunc(2*1.1*cyy))]
+
+x0 = ((bounds[0][0]+bounds[0][1])/2,(bounds[1][0]+bounds[1][1])/2,
+(bounds[2][0]+bounds[2][1])/2, (bounds[3][0]+bounds[3][1])/2 )
+
 # Rotor 1
 
 shaft = [
@@ -46,7 +53,8 @@ disks = [
     )
 ]
 
-k = [kxx,kyy,cxx,cyy]
+k = [kxx,kyy]
+c = [cxx, cyy]
 
 def change_bearings(k):
     bearings = [
@@ -54,6 +62,30 @@ def change_bearings(k):
         cxx=k[2], cyy=k[3]),
         rs.BearingElement(6, kxx=k[0], kyy=k[1],
         cxx=k[2], cyy=k[3])
+    ]
+    rotor = rs.Rotor(shaft, disks, bearings)
+    results1 = rotor.run_freq_response(speed_range)
+    r = results1.freq_resp[16][16]
+    return np.sqrt(r.imag**2 + r.real**2)
+
+def change_stiffness(k):
+    bearings = [
+        rs.BearingElement(0, kxx=k[0], kyy=k[1],
+        cxx=x0[2], cyy=x0[3]),
+        rs.BearingElement(6, kxx=k[0], kyy=k[1],
+        cxx=x0[2], cyy=x0[3])
+    ]
+    rotor = rs.Rotor(shaft, disks, bearings)
+    results1 = rotor.run_freq_response(speed_range)
+    r = results1.freq_resp[16][16]
+    return np.sqrt(r.imag**2 + r.real**2)
+
+def change_dampening(c):
+    bearings = [
+        rs.BearingElement(0, kxx=x1[0], kyy=x1[1],
+        cxx=c[0], cyy=c[1]),
+        rs.BearingElement(6, kxx=x1[0], kyy=x1[1],
+        cxx=c[0], cyy=c[1]),
     ]
     rotor = rs.Rotor(shaft, disks, bearings)
     results1 = rotor.run_freq_response(speed_range)
@@ -86,19 +118,22 @@ for i in range(n_de_picos):
 
 z1 = z2
 
-# Funcao objetivo Ritto
+def objective_stiffness(k):
+    res = (norm(z1 - change_stiffness(k), 2)**2)/(norm(z1, 2)**2)
+    return res
+
+def objective_dampening(k):
+    res = (norm(z1 - change_dampening(c), 2)**2)/(norm(z1, 2)**2)
+    return res
+
 def objective(k):
     res = (norm(z1 - change_bearings(k), 2)**2)/(norm(z1, 2)**2)
     return res
 
-# A funcao objetivo do LM é definida de maneira diferente
-def objective_lm(k):
-    res = (z1 - change_bearings(k))
-    return np.array(res)
-
-
-x0 = ((bounds[0][0]+bounds[0][1])/2,(bounds[1][0]+bounds[1][1])/2,
-(bounds[2][0]+bounds[2][1])/2, (bounds[3][0]+bounds[3][1])/2 )
+# def objective_aldemir(k):
+#     res = np.abs(change_bearings(k) - z1)
+#     res = sum(res/np.abs(z1))
+#     return res
 
 # Para salvar no Excel
 df = []
@@ -112,37 +147,18 @@ def save_to_df():
     trunc(res.x[2]),np.abs((k[2]-res.x[2])/(k[2]))*100,
     trunc(res.x[3]),np.abs((k[3]-res.x[3])/(k[3]))*100,
     res.nfev,algoritmo))
-et1 = time.time()
-#%%
+
 # Otimizações:
-# Evolução diferencial
-algoritmo = "Ev.Dif."
-print("Começando otimização de evolução diferencial, tempo decorrido: {} segundos".format(round(et1-st1,2)))
-for i in range(1):
-    st = time.time()
-    res = differential_evolution(objective, bounds, disp=True, polish=False)
-    et = time.time()
-    save_to_df()
 
-et2 = time.time()
-print("Começando otimização de Dual Annealing, tempo decorrido: {} segundos".format(round(et2-et1)))
+res = differential_evolution(objective, bounds, disp=True, polish=False)
 
-# Dual annealing
-for i in range(1):
-    algoritmo = "D.Ann."
-    st = time.time()
-    res = dual_annealing(objective, bounds, maxfun=1000)
-    et = time.time()
-    save_to_df()
+print('Tempo total:{}, Tempo 1:{}, Tempo 2:{}'.format(-st1+et2,et1-st1,et2-et1) )
 
-# Levenberg Marquardt
+print(res_dampening)
+print(res)
 
 
-
-df1 = pd.DataFrame(df[0:10], columns=colunas)
-df2 = pd.DataFrame(df[10:20], columns=colunas)
-
-with pd.ExcelWriter("Dados Rotor 1-1.xlsx", mode='w', engine='openpyxl') as writer:
-    df1.to_excel(writer, sheet_name="Ev.Dif", index=False, float_format="%.2f")  
-    df2.to_excel(writer, sheet_name="D.Ann.", index=False, float_format="%.2f") 
+# with pd.ExcelWriter("Dados Rotor 1-1.xlsx", mode='w', engine='openpyxl') as writer:
+#     df1.to_excel(writer, sheet_name="Ev.Dif", index=False, float_format="%.2f")  
+#     df2.to_excel(writer, sheet_name="D.Ann.", index=False, float_format="%.2f") 
 # %%

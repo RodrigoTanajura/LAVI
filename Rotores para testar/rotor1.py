@@ -1,6 +1,7 @@
 #%%
 import ross as rs
 from math import trunc
+import numpy as np
 
 steel = rs.materials.steel
 
@@ -37,4 +38,5 @@ bearings = [
 
 rotor1 = rs.Rotor(shaft, disks, bearings)
 rotor1.plot_rotor()
+
 # %%
