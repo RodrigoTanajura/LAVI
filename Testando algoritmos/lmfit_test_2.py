@@ -51,7 +51,6 @@ params1 = Parameters()
 params1.add('Kxx', value=x0[0], min=bounds[0][0], max=bounds[0][1])
 params1.add('Kyy', value=x0[1], min=bounds[1][0], max=bounds[1][1])
 
-
 params2 = Parameters()
 params2.add('Cxx', value=x0[2], min=bounds[2][0], max=bounds[2][1])
 params2.add('Cyy', value=x0[3], min=bounds[3][0], max=bounds[3][1])
@@ -147,23 +146,23 @@ def objective_stiffness(k):
 
 def objective_dampening(k):
     res = (z1 - change_dampening(k))
-    return res*100
+    return res
 
 st = time.time()
 # Fit here with the default leastsq algorithm
 minner = Minimizer(objective_stiffness, params1)
 res = minner.minimize()
 et = time.time()
-print("Otimização da rigidez terminou. Tempo decorrido: {}".format(et-st))
+x1 = [int(res.params.get('Kxx')), int(res.params.get('Kyy'))]
 
-x1 = [params1['Kxx'].value, params1['Kyy'].value]
+print("Otimização da rigidez terminou. Tempo decorrido: {}. Valores encontrados: {}".format(et-st, x1))
 
 minner = Minimizer(objective_dampening, params2)
 res = minner.minimize()
 
 # write error report
 report_fit(res)
-
+print(x1)
 # try to plot results
 # try:
 #     import matplotlib.pyplot as plt

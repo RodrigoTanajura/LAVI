@@ -1,3 +1,4 @@
+# Nelder-Mead
 # Aplicando Levenberg Marquardt 
 #%%
 print("Iniciando bibliotecas e funções")
@@ -14,7 +15,7 @@ from math import trunc
 from scipy.signal import find_peaks
 import pandas as pd
 import openpyxl
-from scipy.optimize import least_squares, root
+from scipy.optimize import least_squares, root, minimize
 
 st2 = time.time()
 steel = rs.materials.steel
@@ -108,12 +109,12 @@ et1 = time.time()
 
 # Otimizações:
 # Evolução diferencial
-algoritmo = "LM"
-print("Começando otimização de LM, tempo decorrido: {} segundos".format(round(et1-st1,2)))
+algoritmo = "NM"
+print("Começando otimização de NM, tempo decorrido: {} segundos".format(round(et1-st1,2)))
 n = 1
 for i in range(n):
     st = time.time()
-    res = least_squares(objective, x0, method='dogbox', verbose=1, bounds=bounds)
+    res = minimize(objective, x0, method='Nelder-Mead', bounds=bounds)
     et = time.time()
     save_to_df()
 
@@ -121,7 +122,7 @@ et2 = time.time()
 
 df1 = pd.DataFrame(df[0:n], columns=colunas)
 
-with pd.ExcelWriter("LM4.xlsx", mode='w', engine='openpyxl') as writer:
+with pd.ExcelWriter("NM1.xlsx", mode='w', engine='openpyxl') as writer:
     df1.to_excel(writer, sheet_name="Least_squares", index=False, float_format="%.2f")  
 print("Finalizado")
 # %%

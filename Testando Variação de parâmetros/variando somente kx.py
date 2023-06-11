@@ -82,37 +82,22 @@ def objective(kx, ky):
     res = (norm(z1 - change_bearings(kx, ky), 2)**2)/(norm(z1, 2)**2)
     return res
 
-# n é o número de valores de kx e ky. n = 10 irá gerar um grid de 100 pontos, n = 20 irá gerar um grid de 400 pontos e assim por diante.
-# Cada ponto é uma avaliação da função objetivo.
-n = 20   #obs: n = 10 demora na ordem de 60 segundos para executar.
+n = 10 
 
-# 0.6545 é o tempo de realizar uma avaliação da função objetivo (no meu computador).
-print("Tempo estimado:{}".format((n**2)*0.6545))
-
-# Gerando os valores de x e y respectivamente que serão inputados.
 x = np.linspace(bounds[0][0], bounds[0][1], n)
 y = np.linspace(bounds[1][0], bounds[1][1], n)
 
-# l será a lista de pares de kx e ky que serão inputados na função objetivo
-l = []
-for i in x:
-    for j in y:
-        l.append([i,j])
+g = np.array([objective(i,kyy) for i in x])
+c = np.array([objective(kxx, j) for j in y])
 
-# f(x,y) é um array com as avaliações de todos os pares pela função objetivo.
-def f(x, y):
-    return np.array([objective(l[i][0],l[i][1]) for i in range(len(l))])
-
-# Armazenando os valores das avaliações da função objetivo em formato de matriz n,n.
-z = f(x, y).reshape(n,n)
-
-# A matrix precisa ser transposta senão kx e ky acabam trocados nos eixos x e y do gráfico. 
-z = np.matrix.transpose(z)
-
-c = plt.imshow(z, interpolation='bilinear', extent=[bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1],])
-colorbar = plt.colorbar(c)
-colorbar.set_label('Função objetivo')
-plt.xlabel("kxx")
-plt.ylabel("kyy")
+plt.plot(np.arange(bounds[0][0],bounds[0][1], 352*100), g)
+plt.title("Variando somente kxx")
+plt.xlabel("Kxx variando de {} a {}".format(bounds[0][0],bounds[0][1]))
+plt.ylabel("Função objetivo")
+plt.show()
+plt.plot(np.arange(bounds[1][0],bounds[1][1], 440*100), c)
+plt.title("Variando somente kyy")
+plt.xlabel("Kyy variando de {} a {}".format(bounds[1][0],bounds[1][1]))
+plt.ylabel("Função objetivo")
 plt.show()
 # %%

@@ -39,12 +39,12 @@ disks = [
 
 k = [kxx,kyy]
 
-def change_bearings(kx, ky):
+def change_bearings(cx, cy):
     bearings = [
-        rs.BearingElement(0, kxx=kx, kyy=ky,
-        cxx=cxx, cyy=cyy),
-        rs.BearingElement(6, kxx=kx, kyy=ky,
-        cxx=cxx, cyy=cyy)
+        rs.BearingElement(0, kxx=kxx, kyy=kyy,
+        cxx=cx, cyy=cy),
+        rs.BearingElement(6, kxx=kxx, kyy=kyy,
+        cxx=cx, cyy=cy)
     ]
     rotor = rs.Rotor(shaft, disks, bearings)
     results1 = rotor.run_freq_response(speed_range)
@@ -60,7 +60,7 @@ for i in range(samples):
 def real_input(kx, ky):
     return change_bearings(kx, ky)+noise
 
-z1 = real_input(kxx, kyy)
+z1 = real_input(cxx, cyy)
 
 speed = speed_range
 
@@ -78,8 +78,8 @@ for i in range(n_de_picos):
 z1 = z2
 
 # Definindo a função objetivo.
-def objective(kx, ky):
-    res = (norm(z1 - change_bearings(kx, ky), 2)**2)/(norm(z1, 2)**2)
+def objective(cx, cy):
+    res = (norm(z1 - change_bearings(cx, cy), 2)**2)/(norm(z1, 2)**2)
     return res
 
 # n é o número de valores de kx e ky. n = 10 irá gerar um grid de 100 pontos, n = 20 irá gerar um grid de 400 pontos e assim por diante.
@@ -90,8 +90,8 @@ n = 20   #obs: n = 10 demora na ordem de 60 segundos para executar.
 print("Tempo estimado:{}".format((n**2)*0.6545))
 
 # Gerando os valores de x e y respectivamente que serão inputados.
-x = np.linspace(bounds[0][0], bounds[0][1], n)
-y = np.linspace(bounds[1][0], bounds[1][1], n)
+x = np.linspace(bounds[2][0], bounds[2][1], n)
+y = np.linspace(bounds[3][0], bounds[3][1], n)
 
 # l será a lista de pares de kx e ky que serão inputados na função objetivo
 l = []
@@ -109,10 +109,10 @@ z = f(x, y).reshape(n,n)
 # A matrix precisa ser transposta senão kx e ky acabam trocados nos eixos x e y do gráfico. 
 z = np.matrix.transpose(z)
 
-c = plt.imshow(z, interpolation='bilinear', extent=[bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1],])
+c = plt.imshow(z, interpolation='bilinear', extent=[bounds[2][0], bounds[2][1], bounds[3][0], bounds[3][1],])
 colorbar = plt.colorbar(c)
 colorbar.set_label('Função objetivo')
-plt.xlabel("kxx")
-plt.ylabel("kyy")
+plt.xlabel("cxx")
+plt.ylabel("cyy")
 plt.show()
 # %%
