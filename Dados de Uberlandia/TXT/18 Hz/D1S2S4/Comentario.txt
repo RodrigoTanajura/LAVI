@@ -1,0 +1,3 @@
+TRAC5 == TRAC1
+
+se trac 1 estiver estranho/corrompido, usar trac5.

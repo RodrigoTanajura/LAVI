@@ -1,0 +1,10 @@
+S3S4 estão no penúltimo nó. Como S3S4 estão na mesma probe, os dados adquiridos por S3 (horizontal) são somente de coplamento, já que o impacto foi feito na VERTICAL.
+
+Houve somente impactos na vertical. Ao subir a frequência o mancal apresentou ruídos estranhos e paramos a máquina. 
+
+Como sempre a ordem dos arquivos é:
+
+FRF S3
+Coerência da FRF S3
+FRF S4
+Coerência da FRF S4

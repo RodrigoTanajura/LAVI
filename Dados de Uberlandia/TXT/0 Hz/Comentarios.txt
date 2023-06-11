@@ -1,0 +1,6 @@
+Tentativa 1 - Usamos um martelo de impacto que estava defeituoso.
+
+
+Tentativa 2 - Feita com a máquina "fria". Não foi usada a configuração de expo decay do martelo.
+
+Tentativa 3 - Feita com a máquina "quente". Foi usada a configuração de expo decay do martelo.
